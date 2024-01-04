@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="favicon" href="https://cdn.discordapp.com/attachments/1188336829494206524/1190393069103755374/favicon.ico?ex=65a1a2f0&is=658f2df0&hm=f37c4d532a15a9b5761f2e7eec1314d91dd681626d492138595567cf0abb3484&" sizes="512x512" />
+    <title>Lag Gun</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <style></style>
+    <h1 style="font-family: Arial">Lag gun</h1>
+    <p style="font-family: Arial">public static void LagGun()
+        {
+            if (Mods.CalculateGrabState(ControllerInputPoller.instance.rightControllerGripFloat, 0.1f))
+            {
+                if (Mods.lagrig == null)
+                {
+                    RaycastHit raycastHit;
+                    if (Physics.Raycast(GorillaLocomotion.Player.Instance.rightControllerTransform.position - GorillaLocomotion.Player.Instance.rightControllerTransform.up, -GorillaLocomotion.Player.Instance.rightControllerTransform.up, out raycastHit) && pointer == null)
+                    {
+                        Mods.pointer = GameObject.CreatePrimitive(0);
+                        Object.Destroy(Mods.pointer.GetComponent<Rigidbody>());
+                        Object.Destroy(Mods.pointer.GetComponent<SphereCollider>());
+                        Mods.pointer.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        Mods.pointer.GetComponent<Renderer>().material.color = Color.black;
+                    }
+                    Mods.pointer.transform.position = raycastHit.point;
+                    if (Mods.CalculateGrabState(ControllerInputPoller.instance.rightControllerIndexFloat, 0.1f))
+                    {
+                        if (raycastHit.collider.GetComponentInParent<VRRig>())
+                        {
+                            Mods.lagrig = raycastHit.collider.GetComponentInParent<VRRig>();
+                        }
+                    }
+                }
+                if (Mods.CalculateGrabState(ControllerInputPoller.instance.rightControllerIndexFloat, 0.1f) && Mods.lagrig != null)
+                {
+                    Mods.Projectile(Mods.lagrig.headMesh.transform.position, -675036877);
+                    Mods.pointer.GetComponent<Renderer>().material.color = Color.black;
+                }
+                else
+                {
+                    Mods.lagrig = null;
+                    Mods.pointer.GetComponent<Renderer>().material.color = Color.black;
+                }
+            }
+            else
+            {
+                Object.Destroy(Mods.pointer);
+                GorillaTagger.Instance.offlineVRRig.enabled = true;
+                GorillaTagger.Instance.offlineVRRig.transform.position = Vector3.zero;
+                GorillaTagger.Instance.rightHandTransform.position = Mods.lagrig.headMesh.transform.position;
+            }
+        }
+        
+        private static void Projectile(Vector3 position, int v)
+        {
+            throw new NotImplementedException();
+        }
+        
+        private static bool CalculateGrabState(float grabValue, float grabThreshold)
+        {
+            return grabValue >= grabThreshold;
+        }</p>
+   
